@@ -12,6 +12,18 @@
             <h5 class="card-title">Descrizione</h5>
             <p class="card-text">{{ $project->description }}</p>
             <p class="card-text"><strong>Tipologia:</strong> {{ $project->type ? $project->type->name : 'Nessuna tipologia associata' }}</p>
+
+            <p class="card-text">
+                <strong>Tecnologie:</strong>
+                @if ($project->technologies->isEmpty())
+                    <span class="text-light">Nessuna tecnologia associata</span>
+                @else
+                @foreach ($project->technologies as $technology)
+                <span class="badge {{ 'badge-' . strtolower($technology->name) }}">{{ $technology->name }}</span>
+            @endforeach
+                @endif
+            </p>
+
             <a href="{{ $project->url }}" target="_blank" class="btn btn-primary">Vai al Progetto</a>
             <hr>
             <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-warning">Modifica</a>

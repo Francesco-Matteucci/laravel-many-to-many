@@ -25,6 +25,17 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Tecnologie</label>
+            @foreach ($technologies as $technology)
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="technologies[]" value="{{ $technology->id }}" id="technology-{{ $technology->id }}"
+                        {{ in_array($technology->id, old('technologies', [])) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="technology-{{ $technology->id }}">{{ $technology->name }}</label>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mb-3">
             <label for="description" class="form-label text-light">Descrizione</label>
             <textarea name="description" id="description" class="form-control text-white" rows="5"></textarea>
         </div>

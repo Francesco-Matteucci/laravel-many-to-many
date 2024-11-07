@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
+use App\Models\Technology;
 use App\Http\Controllers\Controller;
 use App\Models\Type;
 use Illuminate\Http\Request;
@@ -36,8 +37,9 @@ class ProjectController extends Controller
     }
 
     $types = Type::all();
+    $technologies = Technology::all();
 
-    return view('admin.projects.create', compact('types'));
+    return view('admin.projects.create', compact('types', 'technologies'));
 }
 
 
@@ -56,9 +58,17 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'url' => 'nullable|url',
             'type_id' => 'required|exists:types,id',
+            'technologies' => 'array|exists:technologies,id',
         ]);
 
-        Project::create($validatedData);
+        $project = Project::create($validatedData);
+
+        if (isset($validatedData['technologies'])) {
+            $project->technologies()->sync($validatedData['technologies']);
+        } else {
+            $project->technologies()->sync([]);
+        }
+
 
         return redirect()->route('admin.projects.index')->with('success', 'Progetto creato con successo!');
     }
@@ -81,8 +91,9 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $types = Type::all();
+        $technologies = Technology::all();
 
-    return view('admin.projects.edit', compact('project', 'types'));
+    return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -100,9 +111,17 @@ class ProjectController extends Controller
         'title' => 'required|string|max:255',
         'description' => 'nullable|string',
         'url' => 'nullable|url',
+        'type_id' => 'required|exists:types,id',
+        'technologies' => 'array|exists:technologies,id',
     ]);
 
     $project->update($validatedData);
+
+    if (isset($validatedData['technologies'])) {
+        $project->technologies()->sync($validatedData['technologies']);
+    } else {
+        $project->technologies()->sync([]);
+    }
 
     return redirect()->route('admin.projects.index')->with('success', 'Progetto aggiornato con successo!');
     }

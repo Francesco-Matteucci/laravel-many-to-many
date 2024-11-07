@@ -31,34 +31,44 @@
                     @if($projects->isEmpty())
                         <p>Non ci sono progetti disponibili.</p>
                     @else
-                        <table class="table table-dark">
-                            <thead>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Titolo</th>
+                                <th>Tipo</th>
+                                <th>Tecnologie</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($projects as $project)
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Titolo</th>
-                                    <th>Tipo</th>
-                                    <th>Azioni</th>
+                                    <td>{{ $project->id }}</td>
+                                    <td>{{ $project->title }}</td>
+                                    <td>{{ $project->type ? $project->type->name : 'N/A' }}</td>
+                                    <td>
+                                        @if ($project->technologies->isEmpty())
+                                            <span class="text-light">Nessuna</span>
+                                        @else
+                                        @foreach ($project->technologies as $technology)
+                                        <span class="badge {{ 'badge-' . strtolower($technology->name) }}">{{ $technology->name }}</span>
+                                    @endforeach
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.projects.show', $project) }}" class="btn btn-info btn-sm">Visualizza</a>
+                                        <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-warning btn-sm">Modifica</a>
+                                        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($projects as $project)
-                                    <tr>
-                                        <td>{{ $project->id }}</td>
-                                        <td>{{ $project->title }}</td>
-                                        <td>{{ $project->type ? $project->type->name : 'N/A' }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.projects.show', $project) }}" class="btn btn-info btn-sm">Visualizza</a>
-                                            <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-warning btn-sm">Modifica</a>
-                                            <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            @endforeach
+                        </tbody>
+                    </table>
                     @endif
                 </div>
             </div>
