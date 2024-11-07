@@ -131,6 +131,8 @@ class ProjectController extends Controller
             return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
         }
 
+        $project->technologies()->detach();
+
         $project->delete();
 
         return redirect()->route('admin.projects.index')->with('success', 'Progetto eliminato con successo!');
