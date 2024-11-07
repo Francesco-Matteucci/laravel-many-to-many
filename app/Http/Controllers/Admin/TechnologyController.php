@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Technology;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TechnologyController extends Controller
 {
@@ -13,6 +14,10 @@ class TechnologyController extends Controller
      */
     public function index()
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         $technologies = Technology::all();
     return view('admin.technologies.index', compact('technologies'));
     }
@@ -22,6 +27,10 @@ class TechnologyController extends Controller
      */
     public function create()
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         return view('admin.technologies.create');
     }
 
@@ -30,6 +39,10 @@ class TechnologyController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -52,6 +65,10 @@ class TechnologyController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         $technology = Technology::findOrFail($id);
         return view('admin.technologies.edit', compact('technology'));
     }
@@ -61,6 +78,10 @@ class TechnologyController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -76,6 +97,10 @@ class TechnologyController extends Controller
      */
     public function destroy(Technology $technology)
     {
+        if (!Auth::user() || !Auth::user()->is_admin) {
+            return redirect()->route('admin.projects.index')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
+        }
+
         $technology->delete();
     return redirect()->route('admin.technologies.index')->with('success', 'Tecnologia eliminata con successo!');
 
