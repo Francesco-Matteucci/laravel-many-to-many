@@ -52,7 +52,8 @@ class TechnologyController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $technology = Technology::findOrFail($id);
+        return view('admin.technologies.edit', compact('technology'));
     }
 
     /**
@@ -60,14 +61,23 @@ class TechnologyController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $technology = Technology::findOrFail($id);
+        $technology->update($request->only('name'));
+
+        return redirect()->route('admin.technologies.index')->with('success', 'Technology updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Technology $technology)
     {
-        //
+        $technology->delete();
+    return redirect()->route('admin.technologies.index')->with('success', 'Tecnologia eliminata con successo!');
+
     }
 }

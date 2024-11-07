@@ -26,12 +26,16 @@
 
             <a href="{{ $project->url }}" target="_blank" class="btn btn-primary">Vai al Progetto</a>
             <hr>
+            @if(Auth::check() && Auth::user()->is_admin || Auth::check() && Auth::user()->is_moderator )
             <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-warning">Modifica</a>
+            @endif
+            @if(Auth::check() && Auth::user()->is_admin)
             <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">Elimina</button>
             </form>
+            @endif
         </div>
     </div>
 </div>

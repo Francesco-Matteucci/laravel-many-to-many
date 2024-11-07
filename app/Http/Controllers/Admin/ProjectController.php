@@ -16,16 +16,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->is_admin) {
+        if (Auth::check()) {
             $projects = Project::all();
             return view('admin.projects.index', compact('projects'));
         }
-
-        if (Auth::user()->is_moderator) {
-            $projects = Project::all();
-            return view('admin.projects.index', compact('projects'));
-        }
-
 
         return redirect('/')->with('error', 'Accesso negato, non possiedi i privilegi adatti per questa funzione');
     }
